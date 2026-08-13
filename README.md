@@ -253,3 +253,6 @@ Test ZAP Jenkins
 ## CI/CD Security Scan
 
 Ce projet est automatiquement analysé par Jenkins et Gitleaks après chaque modification du dépôt GitHub.
+## CI/CD Security Scan
+
+Analyse automatique du dépôt avec Jenkins et Gitleaks.
