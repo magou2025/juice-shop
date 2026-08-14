@@ -256,3 +256,4 @@ Ce projet est automatiquement analysé par Jenkins et Gitleaks après chaque mod
 ## CI/CD Security Scan
 
 Analyse automatique du dépôt avec Jenkins et Gitleaks.
+
