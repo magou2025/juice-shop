@@ -22,17 +22,35 @@ pipeline {
             }
         }
 
-        stage('Archive SCA report') {
+        stage('DAST - OWASP ZAP') {
             steps {
-                archiveArtifacts artifacts: 'npm-audit-report.json',
-                                 allowEmptyArchive: true
+                sh '''
+                    echo "===== DAST : OWASP ZAP ====="
+
+                    rm -f "$WORKSPACE/zap-report.html"
+
+                    env -u DISPLAY -u XAUTHORITY zaproxy -cmd \
+                      -quickurl http://127.0.0.1:3000 \
+                      -quickout "$WORKSPACE/zap-report.html" \
+                      -quickprogress
+
+                    echo "===== Rapport ZAP généré ====="
+                    ls -lh "$WORKSPACE/zap-report.html"
+                '''
+            }
+        }
+
+        stage('Archive Security Reports') {
+            steps {
+                archiveArtifacts artifacts: 'npm-audit-report.json,zap-report.html',
+                                 allowEmptyArchive: false
             }
         }
     }
 
     post {
         always {
-            echo 'Pipeline SCA terminé.'
+            echo 'Pipeline de sécurité terminé.'
         }
     }
 }
