@@ -30,19 +30,38 @@ pipeline {
             }
         }
 
+        stage('DAST - OWASP ZAP') {
+            steps {
+                sh '''
+                    echo "=== DAST : OWASP ZAP ==="
+                    rm -f zap-report.html zap-report.json
+
+                    # Lancer ZAP en mode quick scan
+                    env -u DISPLAY -u XAUTHORITY zaproxy -cmd \
+                        -quickurl http://127.0.0.1:3000 \
+                        -quickout "$WORKSPACE/zap-report.html" \
+                        -quickprogress
+
+                    echo ""
+                    echo "=== Rapport ZAP généré ==="
+                    ls -lh "$WORKSPACE/zap-report.html"
+                '''
+            }
+        }
+
         stage('Archive Reports') {
             steps {
-                archiveArtifacts artifacts: 'npm-audit-report.json', allowEmptyArchive: true
+                archiveArtifacts artifacts: 'npm-audit-report.json,zap-report.html', allowEmptyArchive: true
             }
         }
     }
 
     post {
         always {
-            echo '✓ Pipeline SCA terminé.'
+            echo '✓ Pipeline de sécurité terminé.'
         }
         success {
-            echo '✓ Build SUCCESS'
+            echo '✓ Build SUCCESS - Tous les scans ont réussi'
         }
         failure {
             echo '✗ Build FAILED'
