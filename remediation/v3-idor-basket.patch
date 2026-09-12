@@ -1,0 +1,59 @@
+commit 56c8f61968058a3812c004fdc5413a08eeb521e2
+Author: maguette01 <magouthioye2003@gmail.com>
+Date:   Tue Sep 8 10:28:04 2026 -0400
+
+    fix: remediate security vulnerabilities
+
+diff --git a/routes/basket.ts b/routes/basket.ts
+index c916bb5..666237b 100644
+--- a/routes/basket.ts
++++ b/routes/basket.ts
+@@ -6,25 +6,40 @@
+ import { type Request, type Response, type NextFunction } from 'express'
+ import { ProductModel } from '../models/product'
+ import { BasketModel } from '../models/basket'
+-import * as challengeUtils from '../lib/challengeUtils'
+ 
+ import * as utils from '../lib/utils'
+ import * as security from '../lib/insecurity'
+-import { challenges } from '../data/datacache'
+ 
+ export function retrieveBasket () {
+   return async (req: Request, res: Response, next: NextFunction) => {
+     try {
+       const id = req.params.id
+-      const basket = await BasketModel.findOne({ where: { id }, include: [{ model: ProductModel, paranoid: false, as: 'Products' }] })
+-      /* jshint eqeqeq:false */
+-      challengeUtils.solveIf(challenges.basketAccessChallenge, () => {
+-        const user = security.authenticatedUsers.from(req)
+-        return user && id && id !== 'undefined' && id !== 'null' && id !== 'NaN' && user.bid && user?.bid != parseInt(id, 10) // eslint-disable-line eqeqeq
++      const user = security.authenticatedUsers.from(req)
++
++      const basket = await BasketModel.findOne({
++        where: { id },
++        include: [{ model: ProductModel, paranoid: false, as: 'Products' }]
+       })
++
++      if (!basket) {
++        return res.status(404).json({
++          status: 'error',
++          message: 'Basket not found'
++        })
++      }
++
++      if (!user || basket.UserId !== user.data.id) {
++        return res.status(403).json({
++          status: 'error',
++          message: 'Access denied'
++        })
++      }
++
+       if (((basket?.Products) != null) && basket.Products.length > 0) {
+         for (let i = 0; i < basket.Products.length; i++) {
+-          basket.Products[i].name = req.__(basket.Products[i].name)
++          basket.Products[i].name = req.__(
++            basket.Products[i].name
++          )
+         }
+       }
+ 

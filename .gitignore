@@ -19,11 +19,13 @@ data/juiceshop.sqlite
 
 # Fichiers générés par le build
 i18n/*.json
-!i18n/en.json
 ftp/legal.md
 
-# Rapports générés (on les gardera pour les livrables, mais pas dans le repo)
-npm-audit-report.json
-zap-report.html
-reports/
-i18n/en.json
+# Ancien projet
+Jenkinsfile.old
+
+# Fichiers temporaires
+*.tmp
+*.swp
+.DS_Store
+README-juiceshop-original.md

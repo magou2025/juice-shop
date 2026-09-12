@@ -1,0 +1,27 @@
+commit 6bc948269ea25d06ac29915687baf21ee5730568
+Author: maguette01 <magouthioye2003@gmail.com>
+Date:   Thu Sep 10 12:37:07 2026 -0400
+
+    fix(security): update pdfkit and crypto-js (V5)
+
+diff --git a/package.json b/package.json
+index 4ef5d00..b8c10b8 100644
+--- a/package.json
++++ b/package.json
+@@ -104,6 +104,7 @@
+     "cookie-parser": "^1.4.7",
+     "cookieconsent": "^3.1.1",
+     "cors": "^2.8.5",
++    "crypto-js": "^4.2.0",
+     "download": "^8.0.0",
+     "errorhandler": "^1.5.1",
+     "ethers": "^6.16.0",
+@@ -139,7 +140,7 @@
+     "notevil": "^1.3.3",
+     "on-finished": "^2.3.0",
+     "otplib": "^13.4.0",
+-    "pdfkit": "^0.11.0",
++    "pdfkit": "^0.20.2",
+     "portscanner": "^2.2.0",
+     "prom-client": "^15.1.3",
+     "pug": "^3.0.3",
